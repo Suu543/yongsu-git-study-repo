@@ -340,8 +340,8 @@ echo b > b.txt
 git add .
 git commit -m "Merge Test Commit #2"
 
-// 3. HEAD Pointer ==> main
-git switch main
+// 3. HEAD Pointer ==> master
+git switch master
 
 // 4. Master브랜치와 bugfix/signup-form 브랜치를 Fast-Forward 방식으로 병합해 보겠습니다.
 git merge bugfix/signup-form
@@ -376,8 +376,8 @@ git commit -m "Update toc.txt"
 // 3. 커밋 사항을 검토해보겠습니다.
 git log --oneline --all --graph --decorate
 
-// 4. HEAD Pointer ==> main
-git switch main
+// 4. HEAD Pointer ==> master
+git switch master
 
 // 5. Fast-Forward Merges 적용이 가능함에도, 새로운 커밋 생성하는 방식을 사용해보겠습니다.
 // 새로운 커밋이기 때문에 커밋 메세지를 요구합니다.
@@ -466,8 +466,8 @@ git commit -m "Buld the change password"
 // 4. 커밋 사항을 검토해보겠습니다.
 git log --oneline --all --graph --decorate
 
-// 5. HEAD ==> main
-git switch main
+// 5. HEAD ==> master
+git switch master
 
 // 6. objectives.txt 내용 업데이트 후, 커밋을 하나 생성해보겠습니다.
 echo ** >> objectives.txt
@@ -476,10 +476,10 @@ git add .
 git commit -m "Update Objectives.txt"
 
 // 7. 커밋 사항을 검토해보겠습니다.
-// main and feature/change-password 브랜치가 더는 일자 구조를 띠지 않는 것을 확인할 수 있습니다. 일자 구조를 Git에서는 Direct Linear Path라 칭합니다.
+// master and feature/change-password 브랜치가 더는 일자 구조를 띠지 않는 것을 확인할 수 있습니다. 일자 구조를 Git에서는 Direct Linear Path라 칭합니다.
 git log --oneline --all --graph --decorate
 
-// 8. 이 시점에 feature/change-password 브랜치를 main 브랜치에 병합하게 되면 Three-Way Merges가 적용됩니다.
+// 8. 이 시점에 feature/change-password 브랜치를 master 브랜치에 병합하게 되면 Three-Way Merges가 적용됩니다.
 git merge feature/change-password
 
 // 9. 커밋 사항을 검토해보겠습니다.
@@ -523,16 +523,16 @@ echo bugfix/change-password >> change-password.txt
 git add .
 git commit -m "Build the change password"
 
-// 3. HEAD ==> main
-git switch main
+// 3. HEAD ==> master
+git switch master
 
-// 4. change-password.txt 내용 수정 후, 커밋을 하나 생성해보겠습니다. (main 브랜치)
-echo main >> change-password.txt
+// 4. change-password.txt 내용 수정 후, 커밋을 하나 생성해보겠습니다. (master 브랜치)
+echo master >> change-password.txt
 
 git add .
 git commit -m "Build the change password"
 
-// 5. bugfix/change-password 브랜치를 main 브랜치에 병합해보겠습니다.
+// 5. bugfix/change-password 브랜치를 master 브랜치에 병합해보겠습니다.
 git merge bugfix/change-password
 
 // 병합 충돌이 발생한 것을 확인할 수 있습니다.
@@ -555,7 +555,7 @@ code change-password.txt
 /*
 hello
 <<<<<<<< HEAD (Current Change)
-main
+master
 =======
 bugfix/change-password
 bugfix/change-password
@@ -597,12 +597,313 @@ git merge --abort
 
 ## 12. Undoing a Faulty Merge
 
+브랜치를 병합을 했음에도 내부적 오류에 의해 제대로 병합되지 않는 상황이 발생할 수 있습니다. <br />
+이때 오류가 발생한 병합을 취소하고, 코드가 제대로 동작하도록 수정 후 재병합해야 합니다.
+
+문제 해결에 두 가지 방법을 사용할 수 있습니다.
+
+1. Reset: 이미 생성된 `Merge Commit` 삭제
+
+- 모든 작업을 개인 컴퓨터에서 했다면 크게 문제가 없지만, 팀 단위로 커밋을 공유하는 상황이라면 작업 과정 일부가 소실되기 때문에 신중히 이 방법을 선택해야 합니다.
+
+2. Revert: 새로운 커밋 생성
+
+- 이미 생성된 `Merge Commit`을 이전 상태로 되돌리고, 새로운 커밋을 생성하는 방법입니다. 이 같은 상황을 `revert(되돌아가다)`라 칭합니다.
+
+`Solution #1`
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*MJ8TFCHJMoLl39tt" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*Gv58jmGcbL84Nr-n" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*HCMDqk8rfJcFpuUmYEHcbw.png" />
+
+1. 첫 번째 사진을 보면 `HEAD Pointer`와 `Master`브랜치가 `Merge Commit`을 가리키고 있습니다. 해당 `Merge Commit`에 문제가 발생한 상황을 생각해 보겠습니다.
+
+2. 이 상황을 해결하고자 `HEAD Pointer`와 `Master`브랜치를 `Merge Commit` 발생 이전 시점으로 되돌리겠습니다. (병합하기 전 위치로 이동시키겠습니다 (Undo)).
+
+3. 최종적으로 사진상의 빨간색 배경의 원은 더는 쓸모없는 커밋이 되기 때문에 `Git`의 내부적 동작으로 자동 삭제됩니다.
+
+---
+
+`Revert`동작을 구현하는 데 꼭 필요한 `Resetting`에 대해 알아보겠습니다.
+
+`Resetting`
+
+1. `Soft`:
+
+- `HEAD Pointer`가 명령한 위치를 가리키지만, `Staging Area and Working Directory`에 어떠한 변경도 반영되지 않습니다. (commit 하기 전 상태)
+
+2. `Mixed`:
+
+- `HEAD Pointer`가 명령한 위치를 가리키면서, 전 위치의 변경 사항을 저장한 `스냅샷(Snapshot)`을 불러와 `Staging Area`에 반영합니다. (add 하기 전 상태)
+
+3. `Hard`:
+
+- `HEAD Pointer`가 명령한 위치를 가리키면서, 전 위치의 변경 사항을 저장한 `스냅샷(Snapshot)`을 불러와 `Staging Area`와 `Working Directory`에 반영합니다. (어떠한 등록도 하지 않은 상태)
+
+<img style="width: 100vw" src="https://cdn-images-1.medium.com/max/800/0*_ud2c-2-FpBtJ0LB" />
+<img style="width: 100vw" src="https://cdn-images-1.medium.com/max/800/0*rrD9ZpFnhMxKUsu8" />
+<img style="width: 100vw" src="https://cdn-images-1.medium.com/max/800/0*OpLW6Xgr0abfZjf4" />
+<img style="width: 100vw" src="https://cdn-images-1.medium.com/max/800/0*6U6FaEbVb5ySMqYd" />
+<img style="width: 100vw" src="https://cdn-images-1.medium.com/max/800/0*5dqdQIqa_FFzxnGI" />
+
+```git
+// 1. HEAD Pointer가 가리키는 브랜치 기준으로 이전 커밋을 리셋하겠습니다.
+git reset --hard HEAD~1
+git reset --hard <ID>
+
+// 2. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph
+```
+
+`Revert`
+`revert`는 특정 커밋을 골라 없었던 일로 만드는 데 사용할 수 있습니다. 특정 커밋에 반영된 내용을 이전 상태로 되돌려주지만, `revert` 커밋을 생성했다는 기록이 남습니다.
+
+`Merge Commit`을 되돌리는 경우 어떤 브랜치를 기준으로 되돌릴지를 명시해야 합니다.
+
+```git
+git revert -m 1 HEAD
+git log --oneline --all --graph
+```
+
+`Reset` vs `Revert`
+
+`Reset` 명령은 커밋 히스토리를 깔끔하게 유지할 수 있고, 혼자 작업 시 편하게 되돌아갈 수 있다는 장점이 있습니다. 그러나, 다른 이들과 같은 브랜치에서 함께 작업할 때 커밋이 뒤섞여버릴 수 있다는 단점도 존재합니다.
+
+`Revert` 명령은 히스토리에 남게 되어 왜 돌아갔는지 등의 기록을 남길 수 있습니다. 또한, 다른 이들과 협업 시 코드 충돌을 최소화할 수 있습니다.
+
 ## 13. Squash Merging
+
+`Squash`는 여러 개의 커밋을 하나의 커밋으로 합치는 방식입니다. `Squash`를 하게 되면 모든 커밋 이력이 하나의 커밋으로 합쳐지고 사라진다는 점을 주의해야 합니다.
+
+`Squash Merge`는 불필요한 커밋을 제거할 때 사용할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*yP547Acy26OhLvcS" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*kD34NesEQ7lHBdrM" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*s3pEfK7C1N6QmYw0" />
+
+1. 첫번째 사진을 보면 `Bugfix` 브랜치의 커밋과 + `Master` 브랜치 커밋이 `Three-Way-Merges`로 병합된 것을 확인할 수 있습니다.
+
+2. `B1 and B2` 커밋의 코드는 필요하지만 이를 하나의 커밋 단위로 생성하거나 혹은 커밋 메시지가 적절하지 않았을 때 두 커밋을 삭제하고 두 번째 사진과 같이 `Master` 브랜치의 마지막 커밋으로 병합하고 싶을 때 `Squash Merging`을 사용할 수 있습니다.
+
+3. `Squash Merging`을 적용하면, 기존의 `B1 and B2` 커밋 내용을 `Master` 브랜치의 새로운 커밋에 반영하고, `B1 and B2` 커밋은 제거해줍니다. 결과적으로 일자의 선형적 형태를 구현할 수 있습니다.
+
+`Squash Merging`는 `B1 and B2`와 같이 정말 불필요한 커밋임이 확실할 때 적용해야 합니다.
+
+- Squash Merging: Simple, Clean, and Linear Shape
+
+`Squash Merging`을 구현해 보겠습니다.
+
+```git
+// 1. HEAD Pointer ==> bugfix/photo-upload
+git switch -C bugfix/photo-upload
+
+// 2. bugfix/photo-upload 브랜치에 두 개의 새로운 커밋 추가하겠습니다.
+echo bugfix >> audience.txt
+git add .
+git commit -m "Update audience.txt"
+
+echo bugfix >> toc.txt
+git add .
+git commit -m "Update toc.txt"
+
+// 3. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph --decorate
+
+// 4. HEAD Pointer ==> master
+git switch master
+
+// 5. bugfix/photo-upload 브랜치를 master 브랜치에 squash 방식으로 병합해보겠습니다.
+git merge --squash bugfix/photo-upload
+
+
+// 6. Staging Area를 검토해보겠습니다.
+git status -s
+
+// 7. 생성한 Squash Merge를 커밋해보겠습니다.
+git commit -m "Fix the bug on the photo upload page."
+
+// 8. bugfix/photo-upload 브랜치는 squash merge 방식으로 병합되었기 때문에, 병합된 브랜치를 확인해도 조회되지 않는 것을 확인할 수 있습니다.
+git branch --merged
+
+// 9. Squash Merge된 브랜치는 예상치 못한 오류를 방지하고자 제거해주는 게 좋습니다.
+git branch -d bugfix/photo-upload
+
+// 10. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph --decorate
+```
 
 ## 14. Rebasing
 
+`Rebase`는 혼자 작업할 때 주로 사용하는 방법입니다. 팀 단위로 적용 시 사용 목적이 분명해야 합니다. `Rebase`의 목적은 커밋 기록을 일자(선형적) 형태로 만들어 더욱 직관적인 커밋 관리에 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*sGBcLZliKj6iL7bu-FLbsg.png" />
+
+위 사진은 두 개의 브랜치 밖에 없으므로 그렇게 복잡한 형태를 띠고 있지는 않습니다. 하지만 브랜치 개수가 많아지고, 지하철 노선도 처럼 복잡한 형태를 띠고 있다면 관리가 쉽지 않습니다. 이러한 기록 관리를 손쉽게 하고자 `Rebase`를 적용할 수 있습니다. 해당 사진에 `Rebase`를 적용하는 방법을 순서대로 확인해 보겠습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*50Ep2YKdX8mweiqh" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*YPiSjCxwf_IynLoP" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*eIXaFV5rUxZmb8hk" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*SpbIoGFSvrQtvnQt" />
+
+`Rebase`를 이해하기 위해서는 `base`가 무엇인지 파악해야 합니다. `base`는 브랜치 사이에 분기가 시작된 커밋을 의미합니다. 두 브랜치 사이에 분기가 시작된 커밋은 빨간색 테두리가 적용된 커밋입니다.
+
+`Rebase` 이름에서 추측할 수 있듯이, `Rebase`는 베이스를 다시 재설정함을 의미합니다.
+
+1. `Master` 브랜치와 `Feature` 브랜치가 병합하기 전 상황으로 되돌아갑니다.
+2. `Master` 브랜치와 `Feature` 브랜치의 `Base`를 찾습니다. (첫 번째 사진의 빨간색 테두리 원)
+3. `Master` 브랜치와 `Feature` 브랜치 사이에 병합 충돌이 발생할 요소가 있는지 검토합니다. (Rebase 적용 여부는 이 단계의 검토에서 결정할 수 있습니다.)
+4. `Rebase`를 적용할 수 있는 형태라면, `Feature` 브랜치의 `F1` 커밋이 `Master` 브랜치를 가리키게 합니다. 이렇게 되면 커밋 기록이 선형(일자의) 형태를 띠고 있는 것을 확인할 수 있습니다.
+5. 마지막으로 `MASTER` 브랜치 포인터를 `Feature` 브랜치로 옮깁니다. `Feature` 브랜치를 삭제하면 최종적으로 `Rebase`가 구현됩니다.
+
+하지만 여기서 기억해야 할 점은, 위와 같이 이해를 돕고자 시각화했을 때는 `F1 and F2` 커밋이 이동해 `Master` 브랜치와 연결된 것 같지만. `Git`의 작업단위인 커밋은 애초에 변경 불가능한 고유한 값인 `Hash Value`로 구성돼 있기 때문에 내부적으로 `F1 and F2`의 복사본인 `F1* and F2*`를 생성해 이어 붙이는 방식으로 동작합니다.
+
+내부적으로는 다음 사진과 같은 형태로 동작합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*aRdhbNxs-qOfLAIE" />
+
+`Rebase`를 구현해 보겠습니다.
+
+```git
+// 1. HEAD Pointer ==> feature/shopping-cart
+git switch -C feature/shopping-cart
+
+// 2. feature/shopping-cart 브랜치에 두 개의 새로운 커밋을 추가하겠습니다.
+echo hello >> cart.txt
+git add .
+git commit -m "Add cart.txt"
+
+echo hello >> toc.txt
+git add .
+git commit -m "Update toc.txt"
+
+// 3. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph --decorate
+
+// 4. feature/shopping-cart 브랜치가 master 브랜치의 마지막 커밋을 가리키도록 만들어 보겠습니다. (rebase)
+git switch feature/shopping-cart
+git rebase master
+
+// 5. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph --decorate
+
+// 6. Fast-Forward Merges를 구현해 보겠습니다.
+git switch master
+git merge feature/shopping-cart
+
+// 7. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph --decorate
+```
+
+제가 `F2*` 커밋 작업하고 있을 때, 동료 중 한 명이 `F2` 커밋을 작업한다면 충돌이 발생합니다. 이러한 충돌이 발생하지 않게 하는 게 가장 좋지만, 그럼에도 발생했을 때 해결하는 방법에 대해 알아보겠습니다.
+
+```git
+// 1. HEAD Pointer ==> master
+git switch master
+
+// 2. master 브랜치에 새로운 커밋을 추가하겠습니다.
+echo ocean > toc.txt
+git add .
+git commit -m "Update toc.txt"
+
+// 3. HEAD Pointer ==> feature/shopping-cart
+echo mountain > toc.txt
+git add .
+git commit -m "Write mountain to toc"
+
+// 4. 커밋 사항을 검토해보겠습니다. 두 브랜치 사이에 분기가 발생했습니다.
+git log --oneline --all --graph --decorate
+
+// 5. HEAD Pointer ==> feature/shopping-cart
+git switch feature/shopping-cart
+
+// 6. feature/shopping-cart 브랜치가 master 브랜치의 마지막 커밋을 가리키도록 만들어 보겠습니다. (rebase)
+git rebase master
+
+// 다음 오류가 발생합니다
+/*
+error: could not apply 6b455cc... Write mountain to toc
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+Could not apply 6b455cc... Write mountain to toc
+Auto-merging toc.txt
+CONFLICT (content): Merge conflict in toc.txt
+*/
+
+// 7. 오류를 검토해 보겠습니다.
+code toc.txt
+
+// 충돌 파일을 제거하고 바로 rebase를 하고 싶은 경우
+git add/rm <충돌 파일>
+git rebase --continue
+
+// rebase 하기 전 상태로 돌아가고 싶은 경우
+git rebase --abort
+```
+
 ## 15. Cherry Picking
 
+다른 브랜치에 있는 특정 커밋을 선택적으로 `main` 브랜치에 적용하고 싶을 때 `Cherry Picking`을 사용할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*QwWYUDeViZ4-_HoR" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*3u6ZdtK5XSd5Ick9" />
+
+`Feature` 브랜치의 `F2` 커밋을, `Master` 브랜치의 끝에 추가하고 싶은 상황입니다. 이 경우 `Cherry Picking`을 사용할 수 있습니다.
+
+`Cherry Picking`을 구현해 보겠습니다.
+
+```git
+// 1. HEAD Pointer ==> feature/shopping-cart
+git switch feature/shopping-cart
+
+// 2. feature/shopping-cart 브랜치에 두 개의 새로운 커밋을 추가하겠습니다.
+echo hello > world.txt
+git add .
+git commit -m "Creating world.txt"
+
+echo world > hello.txt
+git add .
+git commit -m "Creating hello.txt"
+
+// 3. HEAD Pointer ==> master
+git switch master
+
+// 4. 커밋 사항을 검토해보겠습니다.
+git log --oneline --all --graph
+
+// 5. F2 커밋 아이디가 948db99입니다. 해당 커밋을 선택적으로 가져와 Master 브랜치에 반영해 보겠습니다.
+git cherry-pick 948db99
+
+// 6. 커밋 사항을 검토해보겠습니다. 해당 커밋을 선택적으로 가져온 것을 확인할 수 있습니다.
+git log --oneline --all --graph
+```
+
 ## 16. Picking a File from Another Branch
+
+`Cherry Picking`은 다른 브랜치의 커밋을 선택적으로 가져오는 방식입니다. 만약 커밋이 아닌 특정 파일만 가져오고 싶은 경우 `restore` 명령어를 사용할 수 있습니다.
+
+```git
+// 1. HEAD Pointer ==> feature/send-email
+git switch -C feature/send-email
+
+// 2. feature/send-email 브랜치에 두 개의 새로운 커밋을 추가하겠습니다.
+echo river >> toc.txt
+git add .
+git commit -m "Update toc.txt"
+
+// 3. HEAD Pointer ==> master
+git switch master
+
+// 4. feature/send-email 브랜치의 toc.txt 파일을 가져오겠습니다.
+git restore --source=feature/send-email -- toc.txt
+
+// 5. Staging Area를 확인해보면 send-email 브랜치의 toc.txt 파일을 가져온 것을 확인할 수 있습니다.
+git status -s
+cat toc.txt
+```
 
 ## 17. Branching in VSCode

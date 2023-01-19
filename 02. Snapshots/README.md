@@ -47,7 +47,7 @@ rm -rf .git
 
 Git Workflow: `Git`이 동작하는 작업 절차 혹은 작업 흐름에 대해 알아보겠습니다.
 
-<img src="https://cdn-images-1.medium.com/max/800/1*ZlTfgdLnXmsQ4UO06b184g.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*ZlTfgdLnXmsQ4UO06b184g.png" />
 
 사진상의 디렉토리 색상별 의미
 
@@ -75,9 +75,10 @@ Local Directory ==> Staging Area ==> Git Repository
 ```
 
 `Git Workflow Summary`
-<img src="https://cdn-images-1.medium.com/max/800/1*0XatSTFirkTcDXmkyXLLbw.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*4KCmvE0nAUu2ZP5xjsBijg.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*wkLdZoJnZNotEdU-gUMpWQ.png" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*0XatSTFirkTcDXmkyXLLbw.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*4KCmvE0nAUu2ZP5xjsBijg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*wkLdZoJnZNotEdU-gUMpWQ.png" />
 
 1. 작업 폴더에서 작업을 완수합니다.
 
@@ -95,18 +96,18 @@ Local Directory ==> Staging Area ==> Git Repository
 
 `Git Workflow In Detail`
 
-<img src="https://cdn-images-1.medium.com/max/800/1*N3Vp-z6PzQP-RX-h8oEIgw.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*v1IweT2ckF1VYcDlDzoz-w.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*_vFV4nCp_6nzyZAN0hYqMA.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*3a5iqJaRkygSPWZ8ed6TOg.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*-7dOjMTOaSGyN-9WEg-r-w.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*BewUAUYIM40JBl_kWvzvpw.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*NX8tBvR_KPCm-OjZcnL0fA.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*wyyrqgZlTqGlA1zQPQYfBA.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*wr7nhXLqgvXlkN9PMpSS8A.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*AI-cwWIwxn83bJwdWBps-w.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*m8H4D6okz-9pyTmtY3SX-g.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*aCTNqhCoIA87PtUQ0wtHrg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*N3Vp-z6PzQP-RX-h8oEIgw.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*v1IweT2ckF1VYcDlDzoz-w.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*_vFV4nCp_6nzyZAN0hYqMA.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*3a5iqJaRkygSPWZ8ed6TOg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*-7dOjMTOaSGyN-9WEg-r-w.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*BewUAUYIM40JBl_kWvzvpw.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*NX8tBvR_KPCm-OjZcnL0fA.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*wyyrqgZlTqGlA1zQPQYfBA.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*wr7nhXLqgvXlkN9PMpSS8A.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*AI-cwWIwxn83bJwdWBps-w.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*m8H4D6okz-9pyTmtY3SX-g.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*aCTNqhCoIA87PtUQ0wtHrg.png" />
 
 1. 빈 보라색 폴더에 `file1 and file2`가 추가됩니다.
 
@@ -202,22 +203,22 @@ git commit -m ＂Commit File1 and File2＂
 git commit
 ```
 
-<img src="https://cdn-images-1.medium.com/max/800/0*0PSqL72GPExLtoyf" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*0PSqL72GPExLtoyf" />
 
 ## 4. Committing Best Practices
 
 `Commit(커밋)` 명령어를 실행하는 기준은 다음과 같습니다.
 
-<img src="https://cdn-images-1.medium.com/max/800/1*gdLDK5dQ7HwLrzV0viWy7Q.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*gdLDK5dQ7HwLrzV0viWy7Q.png" />
 
 불필요한 `Commit(커밋)`은 다음과 같습니다.
 
 1. 너무 잦은 커밋: Ex) 매 파일이 변경될 때마다 커밋
 2. 너무 가끔 커밋: Ex) 수십 수백 개의 파일로 구성된 한 기능을 모두 완성 후 커밋
 
-<img src="https://cdn-images-1.medium.com/max/800/1*eUrgluxZopWah24fqKLPBg.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*V58HVOWKFXLKfJd9BjaUgg.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*rWdHwiawg9ob7iTRz8FB9Q.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*eUrgluxZopWah24fqKLPBg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*V58HVOWKFXLKfJd9BjaUgg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*rWdHwiawg9ob7iTRz8FB9Q.png" />
 
 반드시 피해야 할 `Commit(커밋)`:
 
@@ -225,8 +226,8 @@ git commit
 
 - 하나의 커밋에는 하나의 일관성 있는 주제를 담아야 합니다.
 
-<img src="https://cdn-images-1.medium.com/max/800/1*slV1jzl292TrFcWcd9vDCQ.png" />
-<img src="https://cdn-images-1.medium.com/max/800/1*_LSghPtOQHqvLDPUjqfYXg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*slV1jzl292TrFcWcd9vDCQ.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*_LSghPtOQHqvLDPUjqfYXg.png" />
 
 Wording:
 
@@ -526,7 +527,7 @@ git add file1.txt
 git diff --staged
 ```
 
-<img src="https://cdn-images-1.medium.com/max/800/0*Leb_Pec_QWHOfOPi" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*Leb_Pec_QWHOfOPi" />
 
 Visual Diff Tools <br />
 `git diff` 결과 값을 시각화해주는 도구가 몇 가지 있습니다.
@@ -599,7 +600,7 @@ git show HEAD~2:.gitignore
 git ls-tree HEAD~1
 ```
 
-<img src="https://cdn-images-1.medium.com/max/800/0*o7QzvhCOJnWgNZu2" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*o7QzvhCOJnWgNZu2" />
 
 `Git Objects`
 
