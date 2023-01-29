@@ -125,7 +125,7 @@
 
 ## 03. Cloning a Repository
 
-`git clone <주소>`: 클라우드 혹은 온라인 상의 저장소 `Remote Repository`를 내 컴퓨터에 복사하고, 변경 사항을 서로 주고받을 수 있는 길을 생성할 때 사용하는 명령어입니다.
+`git clone <주소>`: 클라우드 혹은 온라인 저장소 `Remote Repository`를 내 컴퓨터에 복사하고, 변경 사항을 서로 주고받는 길을 생성할 때 사용하는 명령어입니다.
 
 ```cmd
 git clone https://github.com/jos50275266/Mars.git
@@ -140,4 +140,188 @@ git log --oneline --all --graph
 
 ## 04. Fetching
 
-## 05. 
+`git fetch`: `clone` 명령어 실행후 `중앙저장소(Remote Repository)`에 변경된 내용을 `로컬저장소(Local Repository)`에 다운로드할 때 사용하는 명령어입니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*9MhF_5435NOQmLWL" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*oN0dMgre2n2cfHbJ" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*O5biR52c2T84I-DL" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*Gks5DOTvSkdMOqTf" />
+
+`Clone` 명령어를 통해 깃허브 `중앙저장소(Remote Repository)`를 복사함과 동시에 깃허브와 `로컬 저장소(Working Directory(Local Repository))` 사이에 연결된 길을 만들었습니다.
+
+로컬 저장소에서 `A` 커밋 부터 작업을 진행하려는데, 중앙저장소에 `B` 커밋이 추가된 소식을 들었습니다. 만약 로컬 저장소에서 `A ==> C` 작업 이후에 `push` 명령어를 통해 중앙저장소에 반영하면, 충돌이 발생합니다. 이와 같은 문제 발생을 방지하고자, `fetch` 명령어를 통해 중앙저장소에 추가된 내용을 로컬 저장소에 다운로드 할 수 있습니다.
+
+`fetch` 명령어를 실행하면, 중앙저장소를 추적하는 `origin/MASTER` 포인터는 다운로드해온 `B` 커밋을 가리키게 됩니다. 하지만 문제는 로컬저장소에는 업데이트가 반영되지 않아, 여전히 `A` 커밋(스냅샷)을 가리키고 있습니다.
+
+`fetch` 명렁어를 통해 업데이트된 중앙저장소 내용을 로컬 저장소에 다운로드했다면, `merge` 명령어를 통해 `MASTER` 브랜치를 `origin/MASTER` 브랜치에 병합해 중앙저장소와 싱크를 맞추고 작업을 이어나가야 합니다.
+
+`Fetching Exercise`
+
+1. Github Repository
+2. README.md 수정
+3. Commit Changes (Commit Directly to the master branch)
+
+```bash
+git log --oneline --all --graph
+
+// 중앙저장소에 있는 내용을 master 브랜치로 다운로드하기
+git fetch
+
+git log --oneline --all --graph
+
+// 로컬저장소와 중앙저장소를 비교해줍니다.
+git branch -vv
+
+git merge origin/master
+// Fast-forward
+
+git log --oneline --all --graph
+
+// 로컬저장소와 중앙저장소를 비교해줍니다.
+git branch -vv
+
+cat README.md
+```
+
+## 05. Pulling
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*oBIya6-v_JBz-83L" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*1JauHm9WGus1SbtY" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*2ZjTJEAV2VCO2xI8" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*i44N41QQRRUT7_yB" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*m2cRqSVYiNRqyhJp" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*1STDCBZKAi8DGfK2" />
+
+`fetch` 명령어를 사용하면 추가로 `merge` 명령어를 사용해 다운로드한 내용을 반영해줘야 합니다. `pull` 명령어를 통해 이 두 단계를 한 번에 구현할 수 있습니다.
+
+`Clone` 명령어를 통해 깃허브 `중앙저장소(Remote Repository)`를 복사함과 동시에 깃허브와 `로컬 저장소(Working Directory(Local Repository))` 사이에 연결된 길을 만들었습니다.
+
+로컬저장소에서 `B` 커밋을 추가로 생성했고, 중앙저장소에서 `C` 커밋을 생성했습니다. 이 경우 로컬저장소가 `push` 명령어로 중앙저장소를 반영하면, 충돌이 발생합니다.
+
+이러한 충돌 상황에 `push` 명령을 실행하기 전, `pull` 명령어를 실행하면 `C` 커밋을 다운로드해 `MASTER` 브랜치에 연결하지 않고 `origin/MASTER` 브랜치를 가리키게 합니다. 이후 깃은 병합을 위해 `Three-Way Merges`를 적용해 `D`라는 새로운 커밋을 생성합니다.
+
+하지만 작업 기록을 오염시킨다는 점에서 `Three-Way Merges` 방식의 병합을 선호하지 않을 수 있습니다. 이 경우 `rebase` 명령어를 통해 문제를 해결할 수 있습니다. `B`와 `C` 커밋 모두 `A` 커밋에 의존하고 있고, 두 커밋 사이에 겹치는 내용이 없다고 가정해보겠습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*6J2xPVp2FzfkMgFn" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*IoalCUdfPNBkDWyE" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*9_YcBw1UTCrCTOO8" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*ut1RybtHGJTSlnFx" />
+
+`pull --rebase` 명령어를 통해 기록이 오염되는 문제를 해결할 수 있습니다.
+(단, 주의해야 할 점은 `rebase` 사용시 `origin/MASTER` 브랜치 위에 `MASTER` 브랜치가 병합된다는 점입니다)
+
+`Pull Exercise`
+
+1. Github Repository
+2. README.md 파일 수정
+3. 다음 코드 실행
+
+```bash
+echo hello > file1.txt
+
+git add .
+git commit -m "Add File1"
+
+git log --oneline --all --graph
+// * be61457 (HEAD -> main) Add file1.txt
+// * ffc35e4 (origin/main, origin/HEAD) Update README.md
+// * f447a1d Initial commit
+
+git pull
+/*
+- 아래와 같이 Non-Linear History가 형성된 것을 확인할 수 있다.
+*   cf7aa42 (HEAD -> main) Merge branch 'main' of https://github.com/jos50275266/Mars into main
+|\
+| * e5d53d6 (origin/main, origin/HEAD) Update README.md
+* | be61457 Add file1.txt
+|/
+* ffc35e4 Update README.md
+* f447a1d Initial commit
+*/
+```
+
+`pull` 명령어도 병합의 일종이기 때문에 `reset` 명령어를 통해 이전 상태로 되돌릴 수 있습니다.
+이전 상태로 되돌려 `--rebase`를 적용해보겠습니다.
+
+```bash
+git reset --hard HEAD~1
+
+git log --oneline --all --graph
+/*
+
+* be61457 (HEAD -> main) Add file1.txt
+| * e5d53d6 (origin/main, origin/HEAD) Update README.md
+|/
+* ffc35e4 Update README.md
+* f447a1d Initial commit
+
+*/
+
+git pull --rebase
+/*
+- Linear 형태를 띠고 있는 것을 알 수 있습니다.
+* 61bc3ef (HEAD -> main) Add file1.txt
+* e5d53d6 (origin/main, origin/HEAD) Update README.md
+* ffc35e4 Update README.md
+* f447a1d Initial commit
+*/
+```
+
+## 06. Pushing
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*KHYTXKtP28fzqdVQ" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*zYECvL5vErqFIeaF" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*imWXcRiNYYct-0Vh" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*FxTRAWb8bx3vGXu8" />
+
+`Clone` 명령어를 통해 깃허브 `중앙저장소(Remote Repository)`를 복사함과 동시에 깃허브와 `로컬 저장소(Working Directory(Local Repository))` 사이에 연결된 길을 만들었습니다.
+
+사진을 보면 `MASTER` 브랜치가 `origin/MASTER` 브랜치보다 한 커밋 앞서 있습니다. 또한 중앙저장소에는 로컬저장소의 변경 사항이 반영되지 않았습니다. `push` 명령어를 통해 로컬저장소의 변경 사항을 중앙저장소에 반영할 수 있습니다.
+
+`push` 명령어를 실행하면, 로컬저장소 내용이 중앙저장소에 반영되고 중앙저장소 상태를 추적하는 `origin/MASTER` 포인터 또한 로컬저장소의 최신 커밋은 `MASTER` 브랜치가 가리키고 있는 곳을 가리키게 됩니다.
+
+`Pushing Exercise`
+
+```bash
+// origin = 중앙저장소(remote repository)를 의미합니다
+git push origin master
+
+// origin이 기본값이기 때문에 생략도 가능합니다.
+git push
+
+// Github Repository를 확인해보면 file1.txt 파일이 추가되어있습니다.
+```
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*g2c0T0PDeipvtV77" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*BGu7hnq5PIENTGUx" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*_zycfHQaEQ5okeLZ" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*RUTUHlDxCoVPvqTZ" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*q9ZE5Ia7AlgB7S_g31Pvdg.png" />
+
+`Push` 명령어를 실행하려 하는데, 위 사진과 같이 중앙저장소에 `D` 커밋이 추가되어 있다면 어떻게 이 문제를 해결할 수 있을까요?
+
+해결책1: `git push -f`
+
+- 해당 명령어는 중앙저장소에 내용을 무시하고 로컬저장소에 작업한 내용을 중앙저장소에 반영하는 방법입니다. (명확한 이유가 없는 한 절대 사용하지 않습니다).
+
+해결책2: `pull` ==> `push`
+
+- `pull` 명령어를 통해 중앙저장소 내용을 다운로드 및 병합을 진행하고, 싱크를 맞춘 상태에서 `push` 명령어를 실행합니다.
+
+## 07. Storing Credientials and Tags
+
+## 08. Releases and Sharing Branches
+
+## 09. Collaboration Workflow
+
+## 10. Pull Requests
+
+## 11. Resolving Conflicts
+
+## 12. Issues, Labels and Milestones
+
+## 13. Contributing to Open-Source Projects
+
+## 14. Keeping a Forked Repository Up to Date
+
+## 15. Collaboration Using VSCode
