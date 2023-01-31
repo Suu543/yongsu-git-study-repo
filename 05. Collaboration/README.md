@@ -308,15 +308,419 @@ git push
 
 - `pull` 명령어를 통해 중앙저장소 내용을 다운로드 및 병합을 진행하고, 싱크를 맞춘 상태에서 `push` 명령어를 실행합니다.
 
-## 07. Storing Credientials and Tags
+## 07. Storing Credientials and Sharing Tags
+
+`github tag`:
+
+- 커밋을 한 시점 참조가 필요할 때 `Hash` 값 대신 알기 쉽도록 이름을 붙일 때 사용할 수 있습니다.
+- 한 번 정한 태그 이름은, 브랜치처럼 위치가 이동이 불가하고, 고정됩니다.
+- 깃에서 각 커밋에 정의할 수 있는 이름으로써, 주로 릴리즈 버전을 표시하는 데 사용합니다.
+- 태그 여부와 이름에 따라 어떤 버전이 중요한 버전인지 파악할 수 있습니다.
+
+`Release`는 유저들에게 소프트워어를 묶고 제공하는 `GitHub`의 방법입니다. 소프트웨어를 제공하기 위해 다운로드를 사용하는 것으로 대신으로 생각할 수 있습니다.
+
+`Tag` 명령어를 통해 커밋에 별명을 설정할 수 있습니다. 하지만 일반적으로 `push` 명령어를 실행시 `Tag`는 중앙저장소에 반영되지 않습니다. 그러므로 `Tag`를 중앙저장소에 반영하기 위해서는 다음과 같이 별도로 `Tag`를 `push` 명령의 대상으로 명시해야합니다.
+
+```bash
+// v1.0 이름으로 현재 HEAD Pointer가 가르치고 있는 브랜치에 태그 추가
+git tag v1.0
+
+git log --oneline --all --graph
+
+// v1.0 태그를 중앙저장소에 반영
+git push origin v1.0
+
+// 모든 태그를 반영하고 싶은 경우
+git push origin --tags
+
+// tag를 삭제하고 싶을 때 --delete 속성을 사용할 수 있습니다.
+git push origin --delete v1.0
+
+git log --oneline --all --graph
+
+git tag -d v1.0
+```
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*wA0Ky--dqIelY8hJY3BmqA.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*dF1Vg76afVNsMQOONo9Q4A.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*xTUvgMSVzriW8-MSlNeScA.png" />
 
 ## 08. Releases and Sharing Branches
 
+`깃허브(Github)`에는 릴리즈 기능이 있습니다다. 깃허브를 통해 협업을 하는 소스코드의 결과물을 공유할 수 있는 기능입니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*f6noMKwh7icYIiB7.png" />
+
+1. `Github` 로그인 후 릴리즈 할 프로젝트를 선택합니다.
+2. 상단에 `release` 탭을 클릭합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*BkzlLEVM9U89IuEw.png" />
+
+3. `Create a new Release`를 선택합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/0*qMRFzAvOe8s98N6F.png" />
+
+4. `Release` 작성 내용은 다음과 같습니다.
+
+- 보통 버전명을 입력하고, 제목 및 내용을 작성합니다.
+- `Pre-release`인지 아닌지 체크하는 것 또한 중요합니다.
+- `tag` 이름과, `branch` 제목 및 상세 설명을 입력합니다. 사전에 빌드된 바이러니를 업로드 할 예정이라면 하단의 파일 첨부 부분에 끌어다 놓으면 됩니다.
+- `Pre-release`: 공식적 배포 이전 노출시키는 것으로 베타버전을 생각할 수 있습니다.
+
+5. `Publish Release`를 클릭하면 릴리즈가 완료됩니다.
+
+`사용 목적`
+
+태그와 릴리즈를 사용하면 소스의 버전 관리가 쉬워집니다. 이를 하나의 배포전략으로 적용해 특정시점으로 롤백하거나, 배포 버전을 생성하는 용도로 사용할 수 있습니다.
+
+태그는 읽기전용 커밋이라 생각하면 이해가 쉽습니다. 커밋의 경우 내용 수정이 가능하지만, 태그는 수정할 수 없기 때문에 읽기전용 커밋의 개념이고, 소프트웨어의 새로운 버전을 릴리즈 할 때마다 사용할 수 있습니다.
+
+Ex) 서비스1.0 버전이 릴리즈 될 때 태그해두고, 서비스1.1 버전을 개발하면서, 그 사이에 사용한 브래친와 커밋을 합쳐 서비스1.1 완성 버전에 태그를 적용하고 릴리즈 할 수 있습니다.
+
+태그를 조회할 때는 태그들의 사전 순으로 정렬됩니다. 그러므로 태그명 그 자체가 버전을 나타낼 수 있습니다. 협업 시 특정 부분에 문제가 생겼을 때, 이전 태그를 전달하는 방식으로 문제를 해결할 수 있습니다. 또한 테스트 목적의 작업을 할 때 코드 복원의 목적으로 사용할 수 있습니다.
+
+### Sharing Branches
+
+로컬저장소에만 존재하는 브랜치를 중앙저장소에 반영하는 방법을 알아보겠습니다.
+
+```bash
+// 새로운 브랜치 생성 후 해당 브랜치로 전환
+git switch -C feature/change-password
+
+// 다음 오류는 feature/change-password 브랜치는 origin 브랜치와 연결되어 있지 않음을 의미합니다.
+git push
+/*
+fatal: The current branch feature/change-password has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin feature/change-password
+*/
+
+// main 브랜치는 origin/main과 연결된 반면에, feature/change-password 브랜치는 연결된 origin이 없습니다.
+git branch -vv
+
+// feature/change-password 브랜치를 origin과 연결하겠습니다.
+git push --set-upstream origin feature/change-password
+
+// 축약형
+git push -u origin feature/change-password
+
+git branch -vv
+
+// remote tracked branch를 확인해보겠습니다.
+git branch -r
+
+// origin/HEAD -> origin/main
+// origin/feature/change-password
+// origin/main
+
+// 브랜치를 삭제해보겠습니다.
+git push -d origin feature/change-password
+
+// remote tracked brach를 확인해보겠습니다.
+git branch -r
+/*
+  origin/HEAD -> origin/main
+  origin/main
+*/
+
+// 로컬저장소에는 여전히 브랜치가 존재합니다.
+git branch -vv
+
+// 로컬저장소에서 해당 브랜치를 삭제하겠습니다.
+git switch main
+git branch -d feature/change-password
+```
+
 ## 09. Collaboration Workflow
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*Mv30BvBIi-3Fmw1QGJKnOg.png" />
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*ES1EO10qih3s7yUplZSPYw.png" />
+
+1. `Github Repository`를 생성합니다.
+2. `Github` 사이트에서 `feature/change-password` 브랜치를 생성합니다.
+3. `This branch is even with master`의미는 생성한 `feature/change-password`브랜치가 `master` 브랜치와 차이가 없음을 의미합니다.
+4. 로컬저장소로 돌아와 새로운 파일을 생성해 `master` 브랜치에 `push`를 하겠습니다.
+
+```bash
+git fetch
+
+git branch
+// * master
+
+git branch -r
+// origin/HEAD -> origin/master
+// origin/feature/change-password
+// origin/master
+
+// 로컬 feature/change-password를 생성하고, origin/feature/change-password 브랜치와 맵핑하겠습니다.
+
+// feature/change-password 브랜치에서 push되는 내용은 리모트 저장소인 origin/feature/change-password 저장소에 반영됩니다.
+
+git switch -C feature/change-password origin/feature/change-password
+```
+
+5. 이 시점에 김아무개가 `Mars` 저장소를 클론해 협업에 참가했습니다.
+
+```bash
+git clone <저장소주소>
+
+// feature/change-password 브랜치가 없는 것을 확인할 수 있습니다.
+git branch
+* master
+
+// 로컬 feature/change-password를 생성하고, origin/feature/change-password 브랜치와 맵핑하겠습니다.
+
+git switch -C feature/change-password origin/feature/change-password
+
+echo password > file1.txt
+
+git commit -am "Update file1"
+
+git push
+```
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*jBf-BrBfCkc-RrjUl-0H0Q.png" />
+
+6. 김아무개가 중앙저장소에 반영한 내용을 로컬저장소에 반영해보겠습니다.
+
+```bash
+git pull
+
+// HEAD Pointer가 feature/change-password 브랜치를 가리키고 있는 것을 확인할 수 있습니다. 그 이유는 feature/change-password 브랜치는 master 브랜치와 똑같은 상태에서 새로운 작업을 했기 때문입니다. master 브랜치를 최신 상태로 유지하기 위해서는 feature/change-password 브랜치를 검토하고 변경된 내용을 병합해야 합니다.
+
+git log --oneline --all --graph
+
+git switch master
+git merge feature/change-password
+
+// HEAD Pointer가 master 브랜치를 가리키고 있습니다. 문제는 origin/master 브랜치는 여전히 이전 커밋에 위치해 있습니다. master 브랜치를 push 함으로써 이 문제를 해결할 수 있습니다.
+git log --oneline --all --graph
+// 73BB5F (HEAD => master)
+// 478ac2c (tag: v1.0, origin/master, origin/HEAD)
+
+git push
+
+// master, origin/maaster, origin/feature/change-password 등 모든 브랜치의 싱크가 일치합니다.
+git log --oneline --all --graph
+// 73BB5F (HEAD => master, origin/master, origin/feature/change-password)
+
+// feature/change-password 브랜치가 더 이상 필요 없기 때문에 삭제하겠습니다.
+git push -d origin feature/change-password
+
+// 로컬에서도 feature/change-password 브랜치를 삭제하겠습니다.
+git branch -d feature/change-password
+
+git branch
+// * master
+
+// 더는 origin/feature-change-password 브랜치가 존재하지 않습니다.
+git branch -r
+// origin/HEAD -> origin/master
+// origin/master
+```
+
+7. 변경된 사항을 김아무게 로컬저장소에 반영해보겠습니다.
+
+```bash
+git pull
+
+// 여전히 feature/change-password가 존재합니다.
+git branch
+// feature/change-password
+// * master
+
+// feature/change-password를 삭제하겠습니다.
+git branch -d feature/change-password
+
+// 리모트저장소 origin/feature/change-password 브랜치는 여전히 존재합니다.
+git branch -r
+// origin/HEAD -> origin/master
+// origin/feature/change-password
+// origin/master
+
+// 리모트저장소 origin/feature/change-password 브랜치를 삭제하겠습니다.
+git remote prune origin
+
+// git branch -r
+// origin/HEAD -> origin/master
+// origin/master
+```
 
 ## 10. Pull Requests
 
+팀 단위 작업을 할 때 목적에 따라 여러 브랜치가 존재합니다. 이때 작업이 완료된 브랜치를 `master or main` 브랜치에 반영하기에 앞서, 여러 테스트 및 논의 과정이 필요합니다. 깃헙은 이 과정을 체계적으로 관리하는 `pull request` 기능을 제공합니다.
+
+1. 김아무개 저장소에서 `feature/login` 브랜치를 생성해, 작업한 내용을 중앙저장소에 반영하겠습니다.
+
+```bash
+git switch -C feature/login
+
+echo hello > file3.txt
+
+git add .
+git commit -m "Write hello to file3"
+
+git push -u origin feature/login
+```
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*q9um_Rp9AJW5Jp32O7Vz3Q.png" />
+
+`Compare & Pull request` 버튼을 클릭하거나, 직접 `Pull requests` 탭으로 이동해 `Pull request`를 생성할 수 있습니다.
+
+1. Create Pull Request
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*gLMs4eg3aIE_hPNgLufzVQ.png" />
+
+`feature/login` 브랜치에는 파일 수정 외에는 복잡한 작업을 하지 않았기 때문에 `These branches can be automatically merged`라는 메세지가 출력됩니다. 스크롤을 내려보면 변경 사항을 검토할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*3ZC7JUKh_jRlBKJaLDi9Eg.png" />
+
+`Create Pull Request` 버튼을 누르면 다음과 같이 병합에 대한 코멘트를 남길 수 있는 창이 출력됩니다. 조금 더 의미 있는 제목으로 변경해 보겠습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*4sefKz3dONryAVJBQlCtSw.png" />
+
+최종적으로 `Create Pull Request` 버튼을 클릭하면 다음 사진과 같이 결과값이 출력됩니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*uv01h9k4ogN1Axv_iNPVRw.png" />
+
+오른쪽 탭 중 `reviewers` 탭을 클릭해 프로젝트 팀원 중 한 명을 등록하면 해당 팀원의 이메일로 검토를 기다린다는 연락이 전달됩니다 (Awaiting requested review from 본 계정).
+
+본 계정으로 접속하면 김아무개가 요청한 `Pull Request`를 확인할 수 있습니다. 출력되는 메세지는 다음과 같습니다: `김아무개 requested your review on this pull request.`
+
+검토를 원하는 경우 `Add your review` 버튼을 클릭합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*zCw7arUbHaWanRCFMvMLuw.png" />
+
+클릭 시 다음과 같이 검토할 수 있는 탭이 출력됩니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*hf5LyPETh3PP5NtIrGjW4g.png" />
+
+변경 사항을 검토하고 다음과 같이 수정 사항을 전달할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*xBgxO1wCWSLAwpy5gYwSaA.png" />
+
+`Start a review` 버튼을 클릭하면 다음 탭이 출력됩니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*rZCrgqQrvPEE9A1UknA2cw.png" />
+
+`Finish your review` 버튼과 함께 최종 전달 사항을 작성할 수 있습니다. 만약 수정 요청 사항이 있는 경우 `Request changes` 항목을 클릭하고 리뷰를 전달할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*JLYvTfSbsyNXNwY3up1YnA.png" />
+
+`Conversation` 탭을 방문하면 타임라인 방식으로 검토 사항을 확인할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*om2E7ysVoNfSr4a0lxvxsQ.png" />
+
+김아무개는 본 계정에서 요청한 사항을 로컬에 반영하고 다시 `push`이후 `pull request`를 전달해보겠습니다.
+
+```bash
+// 김아무개
+
+echo Hello > file3.txt
+
+git commit -am "Capitalize Hello."
+
+git push
+```
+
+김아무개는 `push`를 하고 `Reviewers` 탭에 순환 형태 버튼을 눌러 다시 검토(리뷰) 요청을 보냅니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*4n_cbVrlUpnaThRYoW1bhw.png" />
+
+다시 본 계정으로 돌아오면 다음 알림이 출력됩니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*o8qelqBGTUerU1m7w9rPMw.png" />
+
+김아무개가 수정한 내용이 괜찮다면 다음 메세지와 함께, `Approve` 항목을 선택 후 `Submit the review` 버튼을 클릭합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*PpooPbSlwxlFfJNziGRfdw.png" />
+
+`Conversation` 탭에 방문해보면, `Reviewers` 탭에 검토를 요청한 팀원에 체크가 출력된 것을 확인할 수 있습니다. 이는 `동의(Approve)`를 의미합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*NWnQps3niMURh7-eSt1kmA.png" />
+
+`Conversation` 탭 최하단으로 가보면 다음과 같이 `Merge pull request` 버튼을 확인할 수 있습니다. `Merge` 방식에는 세 개가 존재합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*0lsWKjC4OtS4EDUjDZ1Xmw.png" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*4TtYHbac-hInFizK5xrMSg.png" />
+
+간단한 `simple commit merge`를 선택하고 `Merge Pull Request` 버튼을 누르면 ==> `confirm merge` 버튼이 출력되고, 이를 누르면 ==> `Pull request successfully merged and closed`가 출력되고 병합이 완료됩니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*7yNJJFS5LJXiCySNSbPXyQ.png" />
+
+중앙저장소 반영 사항을 김아무개 로컬저장소에 반영해보겠습니다.
+
+```bash
+git switch master
+
+git pull
+
+git log --oneline --all --graph
+// Merge pull request #1 from [name]/feature/login
+
+// 병합이 끝났기 때문에 origin/feature/login 브랜치를 삭제하겠습니다.
+git remote prune origin
+
+git branch -r
+
+git branch -d feature/login
+```
+
 ## 11. Resolving Conflicts
+
+```bash
+// 김아무개
+git switch -C feature/logout
+
+echo hello > file1.txt
+
+git commit -am "write hello to file1"
+
+git push -u origin feature/logout
+```
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*9w17EgE9Xan8b7m2-g_wmg.png" />
+
+`Compare & Pull Request`를 검토하기 전에, `master` 브랜치에 다른 변경 사항을 `push` 한 경우.
+
+```bash
+git switch master
+
+echo world > file1.txt
+
+git commit -am "write world to file1"
+git push
+```
+
+`Compare & Pull Request`를 클릭하면 다음 오류가 출력됩니다: `Can't automatically merge`. 다음과 같이 제목을 변경하고 `Pull Request` 버튼을 클릭합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*eHMJP3iKH65nxtOjttwM1g.png" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*7GbfuCgLTPmS7OMAKZZ4PA.png" />
+
+다음 탭에서 충돌 사항을 검토할 수 있는 항목이 출력됩니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*0VCK3weNFJAnIR7yQGi3iQ.png" />
+
+`Resolve conflicts` 버튼을 클릭하면 충돌 난 파일을 검토할 수 있습니다. 어떤 내용을 반영할지 결정합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*CPu840CzclTSj5bvswCFJQ.png" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*IjGsctYrabkv-IhZ2pU2fQ.png" />
+
+반영이 끝났다면, `Mark as resolved` 버튼을 클릭합니다. 이후 출력된 `Commit merge` 버튼을 클릭합니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*Peuq2LvpmRXm3K5QeF1p2Q.png" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*AgcBzKB_nPnQ0r3G_3Uo6A.png" />
+
+`Pull Requests` 탭을 확인해보면 다음 사진과 같이 충돌이 해결되고, `Merge Pull Request` 버튼이 활성화된 것을 확인할 수 있습니다. 최종적으로 병합이 완료됩니다. 이후 `pull` 명령어를 통해 병합된 데이터를 각자의 로컬저장소에 반영하면 싱크를 유지할 수 있습니다.
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*4RsiSKchlWFRFkxBSDS17g.png" />
+
+<img style="width: 100vw;" src="https://cdn-images-1.medium.com/max/800/1*L68hRbtTjCj4uKepvX-yGg.png" />
 
 ## 12. Issues, Labels and Milestones
 
@@ -325,3 +729,8 @@ git push
 ## 14. Keeping a Forked Repository Up to Date
 
 ## 15. Collaboration Using VSCode
+
+## Git Workflow Resources
+
+- https://inpa.tistory.com/entry/GIT-%E2%9A%A1%EF%B8%8F-github-flow-git-flow-%F0%9F%93%88-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EC%A0%84%EB%9E%B5
+- https://techblog.woowahan.com/2553/
